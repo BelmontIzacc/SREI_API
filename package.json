@@ -5,7 +5,7 @@
   "author": "SREI Team",
   "scripts": {
     "build": "tsc",
-    "serve": "nodemon lib/index.js"
+    "serve": "npm run build && nodemon lib/index.js"
   },
   "engines": {
     "node": "10"

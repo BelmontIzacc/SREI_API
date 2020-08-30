@@ -80,6 +80,6 @@ npm run dev
 
 ## Autores ✒️
 
-* **IBelmont - DOnorato** - *Mapeo*
-* **OBelmonte - IMendez** - *Usuario - Bitacora*
-* **GBautista - GAyala** - *Catalogo*
+* **IBelmont**
+* **OBelmonte**
+* **GBautista**

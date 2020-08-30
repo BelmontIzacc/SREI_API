@@ -8,7 +8,8 @@ class catalogoController implements Controller {
 
     private catalogoCM = new CatalogoCM();
 
-    constructor() {
+    constructor(pathGeneral: string) {
+        this.path = pathGeneral + '' + this.path;
         this.initializeRoutes();
     }
 

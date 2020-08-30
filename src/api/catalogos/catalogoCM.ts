@@ -1,11 +1,12 @@
 import * as admin from 'firebase-admin';
-// import { variable } from '../variables';
+import { variable } from '../variables';
 
 export default class CatalogoCM {
     private db = admin.firestore();
+    private refTest = this.db.collection(variable['tester']);
 
     public test = async (test: string) => {
-        const res = await this.db.collection('TEST').get()
+        const res = await this.refTest.get()
             .then(data => {
                 if (data.empty) {
                     return 'nada';

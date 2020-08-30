@@ -1,5 +1,5 @@
-import dev from './cert/cer-dev';
-import service from './cert/cer-firebase';
+import dev from './cert/cer-dev'; // importa archivo de configuracion de enlace firebase
+import service from './cert/cer-firebase'; // importa archivo de confifuracion de aut para firebase
 export const environment = {
     version: "1.0.0",
     desarrollo: {
