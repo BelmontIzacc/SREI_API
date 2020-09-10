@@ -1,0 +1,1 @@
+{"version":3,"file":"UsNoOwnException.js","sourceRoot":"","sources":["../../src/exceptions/UsNoOwnException.ts"],"names":[],"mappings":";;AAAA,mDAA4C;AAE5C,MAAM,gBAAiB,SAAQ,uBAAa;IAC1C,YAAY,MAAe;QACzB,KAAK,CAAC,GAAG,EAAE,gEAAgE,EAAE,MAAM,CAAC,CAAC;IACvF,CAAC;CACF;AAED,kBAAe,gBAAgB,CAAC"}

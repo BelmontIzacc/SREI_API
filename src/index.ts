@@ -3,7 +3,7 @@ import App from './App'; // importa archivo de configuracion para montar API.
 import { environment } from './environments/environments'; // importa archivo con credenciales necesarias para crear conexion a firebase
 
 // import de catalogos
-import catalogoController from './api/catalogos/catalogo.controller'; // importa controlador de catalogos
+import catalogosController from './api/catalogos/catalogos.controller'; // importa controlador de catalogos
 
 console.log('Mode: dev');
 
@@ -20,7 +20,7 @@ const path = '/API_SREI';
 // se añade controladores a APP para su acceso.
 const app = new App(
     [
-        new catalogoController(path)
+        new catalogosController(path)
     ]
 );
 

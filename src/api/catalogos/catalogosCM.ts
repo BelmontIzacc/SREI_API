@@ -1,0 +1,118 @@
+import * as admin from 'firebase-admin';
+import { variable } from '../variables';
+import { codigos } from '../../exceptions/codigos';
+
+// import de exceptions
+import InternalServerException from '../../exceptions/InternalServerException';
+import DataNotFoundException from '../../exceptions/DataNotFoundException';
+
+// import de interfaces
+import EQP from '../../interfaces/EQP.interface';
+
+// client manager, contiene toda la logica del manejo de los datos
+export default class CatalogosCM {
+    // variables de acceso a db
+    private db = admin.firestore();
+    private refEqp = this.db.collection(variable['equipo']);
+
+    // Endpoint para retornar un registro de la coleccion EQP.
+    public obtenerEquipo = async (equipo: string) => {
+        if (equipo === undefined || equipo === null || equipo === '') {
+            return new DataNotFoundException(codigos.identificadorInvalido);
+        }
+        const registro = await this.refEqp.doc(equipo).get()
+            .then(data => {
+                if (data.exists) {
+                    const document = data.data() as EQP;
+                    return document;
+                }
+                return new DataNotFoundException(codigos.datoNoEncontrado);
+            })
+            .catch(err => {
+                return new InternalServerException(codigos.datoNoEncontrado, err);
+            });
+        return registro;
+    }
+
+    // Endpoint para editar un registro de la coleccion EQP.
+    public editarEquipo = async (equipo: EQP) => {
+        if (equipo === undefined || equipo === null) {
+            return new DataNotFoundException(codigos.datosNoEncontrados);
+        }
+        const key = equipo.id;
+        const existe = await this.obtenerEquipo(key);
+        if (existe instanceof DataNotFoundException) {
+            return existe;
+        }
+        if (existe instanceof InternalServerException) {
+            return existe;
+        }
+        const actual = admin.firestore.Timestamp.now().toDate(); // obtener hora y fecha del servidor
+        equipo.actualizado = actual;
+        const editado = await this.refEqp.doc(key).update(equipo)
+            .then(async () => {
+                const document = await this.obtenerEquipo(key);
+                return document;
+            })
+            .catch(err => {
+                return new InternalServerException(codigos.datoNoEncontrado, err);
+            });
+        return editado;
+    }
+
+    // Endpoint para eliminar un registro de la coleccion EQP.
+    public eliminarEquipo = async (equipo: string) => {
+        if (equipo === undefined || equipo === null || equipo === '') {
+            return new DataNotFoundException(codigos.identificadorInvalido);
+        }
+        const existe = await this.obtenerEquipo(equipo);
+        if (existe instanceof DataNotFoundException) {
+            return existe;
+        }
+        if (existe instanceof InternalServerException) {
+            return existe;
+        }
+        const eliminar = await this.refEqp.doc(equipo).delete()
+            .then(() => {
+                return equipo;
+            })
+            .catch(err => {
+                return new InternalServerException(codigos.datoNoEncontrado, err);
+            });
+        return eliminar;
+    }
+
+    // Endpoint para crear un registro en la coleccion EQP.
+    public crearEquipo = async (equipo: EQP) => {
+        if (equipo === undefined || equipo === null) {
+            return new DataNotFoundException(codigos.datosNoEncontrados);
+        }
+        const actual = admin.firestore.Timestamp.now().toDate(); // obtener hora y fecha del servidor
+        equipo.actualizado = actual;
+        equipo.creacion = actual;
+        if (equipo.checklist === undefined || equipo.checklist === null) {
+            equipo.checklist = null;
+        }
+        const creado = await this.refEqp.add(equipo)
+            .then(async data => {
+                const key = data.id;
+                const eqp = await this.refEqp.doc(key).update({ id: key })
+                    .then(() => {
+                        return key;
+                    })
+                    .catch(err => {
+                        return new InternalServerException(codigos.datoNoEncontrado, err);
+                    });
+                return eqp;
+            })
+            .catch(err => {
+                return new InternalServerException(codigos.datoNoEncontrado, err);
+            });
+        if (creado instanceof InternalServerException) {
+            return creado;
+        }
+        const document = await this.obtenerEquipo(creado);
+        return document;
+    }
+
+}

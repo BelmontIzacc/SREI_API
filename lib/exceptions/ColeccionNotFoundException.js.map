@@ -1,0 +1,1 @@
+{"version":3,"file":"ColeccionNotFoundException.js","sourceRoot":"","sources":["../../src/exceptions/ColeccionNotFoundException.ts"],"names":[],"mappings":";;AAAA,mDAA4C;AAC5C,uCAAoC;AAEpC,MAAM,0BAA2B,SAAQ,uBAAa;IACpD,YAAY,SAAiB;QAC3B,KAAK,CAAC,GAAG,EAAE,gCAAgC,SAAS,GAAG,EAAE,iBAAO,CAAC,kBAAkB,CAAC,CAAC;IACvF,CAAC;CACF;AAED,kBAAe,0BAA0B,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"NoDeleteException.js","sourceRoot":"","sources":["../../src/exceptions/NoDeleteException.ts"],"names":[],"mappings":";;;AAAA,mDAA4C;AAE5C,MAAa,iBAAkB,SAAQ,uBAAa;IAClD,YAAY,MAAc;QACxB,KAAK,CAAC,GAAG,EAAE,8BAA8B,EAAE,MAAM,CAAC,CAAC;IACrD,CAAC;CACF;AAJD,8CAIC;AAED,kBAAe,iBAAiB,CAAC"}

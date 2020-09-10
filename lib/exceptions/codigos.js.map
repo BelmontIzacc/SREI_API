@@ -1,0 +1,1 @@
+{"version":3,"file":"codigos.js","sourceRoot":"","sources":["../../src/exceptions/codigos.ts"],"names":[],"mappings":";;;AACa,QAAA,OAAO,GAAG;IACnB,UAAU,EAAE,MAAM;IAClB,cAAc,EAAE,MAAM;IACtB,kBAAkB,EAAE,MAAM;IAC1B,gBAAgB,EAAE,MAAM;IACxB,mBAAmB,EAAE,MAAM;IAC3B,kBAAkB,EAAE,MAAM;IAC1B,eAAe,EAAC,MAAM;IACtB,aAAa,EAAE,MAAM;IACrB,gBAAgB,EAAE,MAAM;IACxB,qBAAqB,EAAE,MAAM;CAChC,CAAC"}

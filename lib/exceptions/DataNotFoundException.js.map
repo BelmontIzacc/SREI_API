@@ -1,0 +1,1 @@
+{"version":3,"file":"DataNotFoundException.js","sourceRoot":"","sources":["../../src/exceptions/DataNotFoundException.ts"],"names":[],"mappings":";;AAAA,mDAA4C;AAE5C,MAAM,qBAAsB,SAAQ,uBAAa;IAC/C,YAAY,MAAc;QACxB,KAAK,CAAC,GAAG,EAAE,gCAAgC,EAAE,MAAM,CAAC,CAAC;IACvD,CAAC;CACF;AAED,kBAAe,qBAAqB,CAAC"}

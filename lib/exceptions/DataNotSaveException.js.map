@@ -1,0 +1,1 @@
+{"version":3,"file":"DataNotSaveException.js","sourceRoot":"","sources":["../../src/exceptions/DataNotSaveException.ts"],"names":[],"mappings":";;;AAAA,mDAA4C;AAE5C,MAAa,oBAAqB,SAAQ,uBAAa;IACrD,YAAY,MAAc;QACxB,KAAK,CAAC,GAAG,EAAE,4BAA4B,EAAE,MAAM,CAAC,CAAC;IACnD,CAAC;CACF;AAJD,oDAIC;AAED,kBAAe,oBAAoB,CAAC"}
