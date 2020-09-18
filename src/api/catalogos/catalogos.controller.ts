@@ -29,6 +29,7 @@ class catalogosController implements Controller {
     // Al iniciar el controlador carga las respectivas rutas
     initializeRoutes() {
         this.router.get(this.path + '/equipo/:uid', this.obtenerEquipo);
+        this.router.get(this.path + '/equipo/tipo/:tipo', this.obtenerEquipoTipo)
         this.router.put(this.path + '/equipo', validationMiddleware(EditarEquipo, true), this.editarEquipo);
         this.router.delete(this.path + '/equipo/:id', this.eliminarEquipo);
         this.router.post(this.path + '/equipo', validationMiddleware(CrearEquipo, true), this.crearEquipo);
@@ -53,6 +54,26 @@ class catalogosController implements Controller {
         }
         res.send({ estatus: 'Exito', eqp: respuesta });
     }
+
+    /*
+    * @description Endpoint para retornar una sub coleccion de la coleccion EQP.
+    * @params tipo
+    * @param  tipo(tipo del equipo tomado de params) 
+    * @retuns {estatus:Exito/error, eqps: {...} }	
+    */
+   private obtenerEquipoTipo = async (req: Request, res: Response, next: NextFunction) => {
+    const tipo = req.params.tipo;
+    const respuesta = await this.catalogosCM.obtenerEquipoTipo(tipo);
+    if (respuesta instanceof DataNotFoundException) {
+        res.send(respuesta);
+        return;
+    }
+    if (respuesta instanceof InternalServerException) {
+        res.send(respuesta);
+        return;
+    }
+    res.send({ estatus: 'Exito', eqps: respuesta });
+}
 
     /*
     * @description Endpoint para editar un registro de la coleccion EQP.
