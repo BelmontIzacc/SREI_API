@@ -7,7 +7,7 @@ import InternalServerException from '../../exceptions/InternalServerException';
 import DataNotFoundException from '../../exceptions/DataNotFoundException';
 
 // import de interfaces
-import EQP from '../../interfaces/EQP.interface';
+import EQP from '../../interfaces/colecciones/EQP.interface';
 
 // client manager, contiene toda la logica del manejo de los datos
 export default class CatalogosCM {
@@ -18,7 +18,7 @@ export default class CatalogosCM {
     // Endpoint para retornar un registro de la coleccion EQP.
     public obtenerEquipo = async (equipo: string) => {
         if (equipo === undefined || equipo === null || equipo === '') {
-            return new DataNotFoundException(codigos.identificadorInvalido);
+            return new DataNotFoundException(codigos.datoNoEncontrado);
         }
         const registro = await this.refEqp.doc(equipo).get()
             .then(data => {
@@ -29,7 +29,7 @@ export default class CatalogosCM {
                 return new DataNotFoundException(codigos.datoNoEncontrado);
             })
             .catch(err => {
-                return new InternalServerException(codigos.datoNoEncontrado, err);
+                return new InternalServerException(codigos.datoNoEncontrado);
             });
         return registro;
     }
