@@ -13,7 +13,7 @@ import InternalServerException from '../../exceptions/InternalServerException';
 import DataNotFoundException from '../../exceptions/DataNotFoundException';
 
 // controlador para rutas de equipo
-class catalogosController implements Controller {
+class CatalogosController implements Controller {
     public router = Router();
     public path = '/catalogos'; // path principal de acceso a las rutas del controlador
 
@@ -39,7 +39,8 @@ class catalogosController implements Controller {
     * @description Endpoint para retornar un registro de la coleccion EQP.
     * @params uid
     * @param  uid(id del usuario tomado de params) 
-    * @retuns {estatus:Exito/error, eqp: {...} }	
+    * @retuns {estatus:true/false, eqp: {...} }	
+    * @author Belmont
     */
     private obtenerEquipo = async (req: Request, res: Response, next: NextFunction) => {
         const prueba = req.params.uid;
@@ -52,7 +53,7 @@ class catalogosController implements Controller {
             res.send(respuesta);
             return;
         }
-        res.send({ estatus: 'Exito', eqp: respuesta });
+        res.send({ estatus: true, eqp: respuesta });
     }
 
     /*
@@ -83,6 +84,7 @@ class catalogosController implements Controller {
     * caracteristicas(Arreglo en el que se especifican características generales del equipo),
     * checklist(Array solo está presente en la maquinaria)
     * @retuns {estatus:Exito/error, editado: true, eqp: {...} }	
+    * @author Belmont
     */
     private editarEquipo = async (req: Request, res: Response, next: NextFunction) => {
         const eqp = req.body;
@@ -95,14 +97,15 @@ class catalogosController implements Controller {
             res.send(respuesta);
             return;
         }
-        res.send({ estatus: 'Exito', editado: true, eqp: respuesta });
+        res.send({ estatus: true, editado: true, eqp: respuesta });
     }
 
     /*
     * @description Endpoint para eliminar un registro de la coleccion EQP.
     * @params id
     * @param  id(id del registro tomado de params)
-    * @retuns {estatus:Exito/error, eliminado: true, eqp: '...' }	
+    * @retuns {estatus:Exito/error, eliminado: true, eqp: '...' }
+    * @author Belmont
     */
     private eliminarEquipo = async (req: Request, res: Response, next: NextFunction) => {
         const key = req.params.id;
@@ -115,7 +118,7 @@ class catalogosController implements Controller {
             res.send(respuesta);
             return;
         }
-        res.send({ estatus: 'Exito', eliminado: true, eqp: respuesta });
+        res.send({ estatus: true, eliminado: true, eqp: respuesta });
     }
 
     /*
@@ -126,6 +129,7 @@ class catalogosController implements Controller {
     * caracteristicas(Arreglo en el que se especifican características generales del equipo),
     * checklist(Array solo está presente en la maquinaria)
     * @retuns {estatus:Exito/error, creado: true, eqp: {...} }	
+    * @author Belmont
     */
     private crearEquipo = async (req: Request, res: Response, next: NextFunction) => {
         const eqp = req.body;
@@ -138,9 +142,9 @@ class catalogosController implements Controller {
             res.send(respuesta);
             return;
         }
-        res.send({ estatus: 'Exito', creado: true, eqp: respuesta });
+        res.send({ estatus: true, creado: true, eqp: respuesta });
     }
 
 }
 
-export default catalogosController;
+export default CatalogosController;

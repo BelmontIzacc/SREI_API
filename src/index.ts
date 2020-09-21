@@ -2,8 +2,11 @@ import * as admin from 'firebase-admin'; // importa libreria para conexion con f
 import App from './App'; // importa archivo de configuracion para montar API.
 import { environment } from './environments/environments'; // importa archivo con credenciales necesarias para crear conexion a firebase
 
-// import de catalogos
-import catalogosController from './api/catalogos/catalogos.controller'; // importa controlador de catalogos
+// import de controladores
+import CatalogosController from './api/catalogos/catalogos.controller'; // importa controlador de catalogos
+
+//test
+import TestController from './api/test/test.controller';
 
 console.log('Mode: dev');
 
@@ -20,7 +23,8 @@ const path = '/API_SREI';
 // se añade controladores a APP para su acceso.
 const app = new App(
     [
-        new catalogosController(path)
+        new CatalogosController(path),
+        new TestController(path)
     ]
 );
 

@@ -5,7 +5,8 @@ export default interface EQP {
     estado: number;
     disponible: boolean;
     propietario: string;
-    caracteristicas: caracteristica[];
+    laboratorio: string;
+    caracteristicas: caracteristica;
     checklist: check[] | null;
     creacion: any;
     actualizado: any;

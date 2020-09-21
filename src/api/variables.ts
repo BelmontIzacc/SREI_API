@@ -5,5 +5,6 @@ export const variable = {
     "laboratorio": "LAB",
     "mesas": "MS",
     "equipo": "EQP",
-    "prestamos": "PRT"
+    "prestamos": "PRT",
+    "mantenimientos": "MNT"
 }
