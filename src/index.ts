@@ -4,6 +4,7 @@ import { environment } from './environments/environments'; // importa archivo co
 
 // import de controladores
 import CatalogosController from './api/catalogos/catalogos.controller'; // importa controlador de catalogos
+import MantenimientosController from './api/mantenimientos/mantenimientos.controller'; // importa controlador de mantenimientos
 
 //test
 import TestController from './api/test/test.controller';
@@ -24,6 +25,7 @@ const path = '/API_SREI';
 const app = new App(
     [
         new CatalogosController(path),
+        new MantenimientosController(path),
         new TestController(path)
     ]
 );

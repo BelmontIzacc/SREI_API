@@ -4,7 +4,7 @@ import LAB from '../../interfaces/colecciones/LAB.interface';
 import USR from '../../interfaces/colecciones/USR.interface';
 import MS from '../../interfaces/colecciones/MS.interface';
 import EQP from '../../interfaces/colecciones/EQP.interface';
-import MNT from '../../interfaces/colecciones/MNT. interface';
+import MNT from '../../interfaces/colecciones/MNT.interface';
 import PRT from '../../interfaces/colecciones/PRT.interface';
 
 // client manager, contiene toda la logica del manejo de los datos

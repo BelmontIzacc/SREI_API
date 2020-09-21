@@ -60,7 +60,8 @@ class CatalogosController implements Controller {
     * @description Endpoint para retornar una sub coleccion de la coleccion EQP.
     * @params tipo
     * @param  tipo(tipo del equipo tomado de params) 
-    * @retuns {estatus:Exito/error, eqps: {...} }	
+    * @retuns {estatus:Exito/error, eqps: {...} }
+    * @author GBautista	
     */
    private obtenerEquipoTipo = async (req: Request, res: Response, next: NextFunction) => {
     const tipo = req.params.tipo;
@@ -73,7 +74,7 @@ class CatalogosController implements Controller {
         res.send(respuesta);
         return;
     }
-    res.send({ estatus: 'Exito', eqps: respuesta });
+    res.send({ estatus: true, eqps: respuesta });
 }
 
     /*
