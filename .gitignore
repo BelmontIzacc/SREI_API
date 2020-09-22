@@ -64,5 +64,5 @@ node_modules/
 # dotenv environment variables file
 .env
 
-src/environments/cert/cer-dev.ts
-src/environments/cert/cer-firebase.ts
+# Enviroment files
+src/environments
