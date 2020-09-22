@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDefined, IsNumber, IsBoolean, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsDefined, IsNumber, IsBoolean, IsArray, IsOptional, IsObject } from 'class-validator';
 
 export class CrearEquipo {
     @IsDefined({
@@ -55,8 +55,8 @@ export class CrearEquipo {
     @IsDefined({
         message: "Las caracteristicas del Equipo no puede ser nulo."
     })
-    @IsArray({
-        message: "Las caracteristicas del Equipo debe de ser del tipo array."
+    @IsObject({
+        message: "Las caracteristicas del Equipo debe de ser del tipo json."
     })
     @IsNotEmpty({
         message: "Las caracteristicas del Equipo no puede estar vacio."
