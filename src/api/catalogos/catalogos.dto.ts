@@ -56,7 +56,7 @@ export class CrearEquipo {
         message: "Las caracteristicas del Equipo no puede ser nulo."
     })
     @IsObject({
-        message: "Las caracteristicas del Equipo debe de ser del tipo json."
+        message: "Las caracteristicas del Equipo debe de ser un arreglo asociativo."
     })
     @IsNotEmpty({
         message: "Las caracteristicas del Equipo no puede estar vacio."
@@ -148,8 +148,8 @@ export class EditarEquipo {
     @IsDefined({
         message: "Las caracteristicas del Equipo no puede ser nulo."
     })
-    @IsArray({
-        message: "Las caracteristicas del Equipo debe de ser del tipo array."
+    @IsObject({
+        message: "Las caracteristicas del Equipo debe de ser un arreglo asociativo."
     })
     @IsNotEmpty({
         message: "Las caracteristicas del Equipo no puede estar vacio."
