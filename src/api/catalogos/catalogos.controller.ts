@@ -1,3 +1,12 @@
+/*
+ *   Versión 1.1
+ *   Creado al 10/09/2020
+ *   Creado por: IBelmonte
+ *   Modificado al: 23/10/2020
+ *   Editado por: GBautista
+ *   Copyright SReI
+ */
+
 import { Request, Response, Router, NextFunction } from 'express';
 import Controller from '../../interfaces/controller.interface';
 
@@ -29,6 +38,7 @@ class CatalogosController implements Controller {
     // Al iniciar el controlador carga las respectivas rutas
     initializeRoutes() {
         this.router.get(this.path + '/equipo/:uid', this.obtenerEquipo);
+        this.router.get(this.path + '/equipo/tipo/:tipo', this.obtenerEquipoTipo)
         this.router.put(this.path + '/equipo', validationMiddleware(EditarEquipo, true), this.editarEquipo);
         this.router.delete(this.path + '/equipo/:id', this.eliminarEquipo);
         this.router.post(this.path + '/equipo', validationMiddleware(CrearEquipo, true), this.crearEquipo);
@@ -54,6 +64,27 @@ class CatalogosController implements Controller {
         }
         res.send({ estatus: true, eqp: respuesta });
     }
+
+    /*
+    * @description Endpoint para retornar una sub coleccion de la coleccion EQP.
+    * @params tipo
+    * @param  tipo(tipo del equipo tomado de params) 
+    * @retuns {estatus:Exito/error, eqps: {...} }
+    * @author GBautista	
+    */
+   private obtenerEquipoTipo = async (req: Request, res: Response, next: NextFunction) => {
+    const tipo = req.params.tipo;
+    const respuesta = await this.catalogosCM.obtenerEquipoTipo(tipo);
+    if (respuesta instanceof DataNotFoundException) {
+        res.send(respuesta);
+        return;
+    }
+    if (respuesta instanceof InternalServerException) {
+        res.send(respuesta);
+        return;
+    }
+    res.send({ estatus: true, eqps: respuesta });
+}
 
     /*
     * @description Endpoint para editar un registro de la coleccion EQP.

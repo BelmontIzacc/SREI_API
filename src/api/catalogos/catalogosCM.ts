@@ -1,3 +1,12 @@
+/*
+ *   Versión 1.1
+ *   Creado al 10/09/2020
+ *   Creado por: IBelmonte
+ *   Modificado al: 23/10/2020
+ *   Editado por: GBautista
+ *   Copyright SReI
+ */
+
 import * as admin from 'firebase-admin';
 import { variable } from '../variables';
 import { codigos } from '../../exceptions/codigos';
@@ -30,6 +39,31 @@ export default class CatalogosCM {
             })
             .catch(err => {
                 return new InternalServerException(codigos.datoNoEncontrado);
+            });
+        return registro;
+    }
+
+    // Endpoint para retornar subcoleccion de la coleccion EQP por tipo.
+    public obtenerEquipoTipo = async (tipo: string) => {
+        const elements: EQP[]| PromiseLike<EQP[]> = [];
+        if (tipo === undefined || tipo === null || tipo === '') {
+            return new DataNotFoundException(codigos.identificadorInvalido);
+        }
+        const registro = await this.refEqp.where("tipo","==",tipo).get()
+            .then(data => {
+                if (!data.empty){
+                    for (let index = 0; index < data.size; index++) {
+                        if (data.docs[index].exists){
+                            elements[index] = data.docs[index].data() as EQP;
+                        }else{
+                            return new DataNotFoundException(codigos.datoNoEncontrado);
+                        }
+                    }
+                    return elements;
+                }
+                return new DataNotFoundException(codigos.datoNoEncontrado);
+            }).catch(err=>{
+                return new InternalServerException(codigos.datoNoEncontrado, err);
             });
         return registro;
     }
