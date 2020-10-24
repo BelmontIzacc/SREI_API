@@ -1,6 +1,14 @@
+/*
+ *   Versión 1.0
+ *   Creado al 21/09/2020
+ *   Creado por: GBautista
+ *   Modificado al: 23/10/2020
+ *   Editado por: GBautista
+ *   Copyright SReI
+ */
+
 import { Request, Response, Router, NextFunction } from 'express';
 import Controller from '../../interfaces/controller.interface';
-
 
 // import de archivos CM
 import MantenimientosCM from './mantenimientosCM';

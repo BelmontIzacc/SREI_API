@@ -1,3 +1,12 @@
+/*
+ *   Versión 1.1
+ *   Creado al 10/09/2020
+ *   Creado por: IBelmonte
+ *   Modificado al: 23/10/2020
+ *   Editado por: GBautista
+ *   Copyright SReI
+ */
+
 import { Request, Response, Router, NextFunction } from 'express';
 import Controller from '../../interfaces/controller.interface';
 

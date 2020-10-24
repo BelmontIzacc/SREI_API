@@ -1,3 +1,12 @@
+/*
+ *   Versión 1.0
+ *   Creado al 21/09/2020
+ *   Creado por: GBautista
+ *   Modificado al: 23/10/2020
+ *   Editado por: GBautista
+ *   Copyright SReI
+ */
+
 import * as admin from 'firebase-admin';
 import { variable } from '../variables';
 import { codigos } from '../../exceptions/codigos';
@@ -27,15 +36,13 @@ export default class MantenimientoCM {
                     let fechaInicio;
                     let fechaFinal;
                     let ret;
-                    if (!(document.fecha=== undefined || document.fecha === null)){
+                    if (!(document.fecha === undefined || document.fecha === null)){
                         fechaInicio = document.fecha.toDate().toISOString();
-                        //console.log(fechaInicio);
                     }
-                    if (!(document.finalizado=== undefined || document.finalizado === null)){
+                    if (!(document.finalizado === undefined || document.finalizado === null)){
                         fechaFinal = document.finalizado.toDate().toISOString();
-                        //console.log(fechaFinal);
                     }
-                    if(fechaFinal === undefined){
+                    if (fechaFinal === undefined){
                         ret = {
                             title: document.id,
                             start: fechaInicio
@@ -76,15 +83,15 @@ export default class MantenimientoCM {
                             let fechaInicio;
                             let fechaFinal;
                             let ret;
-                            //estructura similar para definir fechas 
-                            if (!(document.fecha=== undefined || document.fecha === null)){
+                            // Estructura similar para definir fechas 
+                            if (!(document.fecha === undefined || document.fecha === null)){
                                 fechaInicio = document.fecha.toDate().toISOString();
                             }
-                            if (!(document.finalizado=== undefined || document.finalizado === null)){
+                            if (!(document.finalizado === undefined || document.finalizado === null)){
                                 fechaFinal = document.finalizado.toDate().toISOString();
                             }
-                            //definiendo tipo de JSON para visualizar
-                            if(fechaFinal === undefined){
+                            // Definiendo tipo de JSON para visualizar
+                            if (fechaFinal === undefined){
                                 ret = {
                                     title: document.id,
                                     start: fechaInicio
