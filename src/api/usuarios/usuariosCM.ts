@@ -1,59 +1,72 @@
 import * as admin from 'firebase-admin';
 import { codigos } from '../../exceptions/codigos';
 import { variable } from '../variables';
-import requestPromise = require("request-promise");
 
-// import de exceptions
+//import de exceptions
 import DataNotFoundException from '../../exceptions/DataNotFoundException';
-import InternalServerException from '../../exceptions/InternalServerException';
+//import InternalServerException from '../../exceptions/InternalServerException';
 
 // import interfaces
 import USR from '../../interfaces/colecciones/USR.interface';
 
+const axios = require('axios');
+
 // client manager, contiene toda la logica del manejo de los datos
 export default class UsuariosCM {
+
     // variables de acceso a db
     private db = admin.firestore();
     private refUs = this.db.collection(variable['usuarios']);
 
     // Endpoint para registrar o logearse dentro del sistema.
     public ingresar = async (credenciales: any) => {
+
+        // Expresiones regulares para boleta o RFC
         const expRFC = /[A-Z][A-Z][A-Z][A-Z[0-9][0-9][0-9][0-9][0-9][0-9][A-Z][A-Z]/;
         const expBoleta = /[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/;
-        let reqData;
-        let path;
-        let operacion;  // Si es 0 loguea a un alumno // Si es 1 loguea a un trabajador // Si es 2 registra a un trabajador
+
+        let requestData; // Datos que se envian a la api de la UPIIZ
+        let path; // ruta de api de la UPIIZ
+        let alumno: Boolean;
+
         if (expBoleta.test(credenciales.username)) {
-            reqData = {
+            requestData = {
                 username: credenciales.username,
                 password: credenciales.password
             };
+
             path = '/pump/web/index.php/login';
-            operacion = 0;
+            alumno = true;
         } else if (expRFC.test(credenciales.username)) {
-            reqData = {
+            requestData = {
                 rfc: credenciales.username,
             };
+
             path = '/pump/web/index.php/personal';
-            operacion = (Object.keys(credenciales).length == 2) ? 1 : 2;
+            alumno = false;
         } else {
             return new DataNotFoundException(codigos.datosNoEncontrados);
         }
-        const respuesta = await this.peticionExterna(path);
-        const res = JSON.parse(respuesta);
-        const estatus = res.estatus;
+
+        const response = await this.peticionExterna(path, requestData);
+        
+        const estatus = response.estatus;
         let usr: any = null;
-        if (estatus) {
-            if (operacion == 0) {
+
+        if (estatus === true) {
+            if (alumno) {
                 usr = await this.loginUser(credenciales.username);
-                if (JSON.stringify(usr) == '[]') {
-                    usr = await this.register(credenciales.username, res.nombre);
+                if (usr instanceof DataNotFoundException) {
+                    const data = response.datos;
+                    usr = await this.register(data.boleta, data.Nombre);
                 }
             } else {
-                usr = (operacion == 1) ?
-                    await this.loginUserTrabajadores(credenciales.username, credenciales.password) :
-                    await this.registrarDoc(credenciales.username, credenciales.password, res.nombre);
+                usr = await this.loginUserTrabajadores(credenciales.username, credenciales.password);
+                if (usr instanceof DataNotFoundException) {
+                    console.log("No se encontro usuario");
+                }
             }
+
             console.log("usr: ", usr);
             return usr as USR;
         }
@@ -61,20 +74,25 @@ export default class UsuariosCM {
     }
 
     // realizar una peticion a un sitio externo
-    private peticionExterna = async (path: string) => {
-        const http = await requestPromise.post({
-            uri: '148.204.142.2/' + path,
+    private peticionExterna = async (path: string, data: any) => {
+        let httpResponse: any;
+
+        const url = 'http://148.204.142.2' + path
+        const header = {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer 584423298741328'
-            },
-            json: true
-        }).then(data => {
-            return data;
-        }).catch(err => {
-            return new InternalServerException(codigos.datoNoEncontrado, err);
-        });
-        return http;
+            }
+        };
+
+        try {
+            httpResponse = await axios.post(url, data, header);
+        } catch (error) {
+            console.error(error.body);
+            httpResponse = 'error';
+        }
+
+        return httpResponse.data;
     }
 
     // login de usuario
@@ -87,6 +105,7 @@ export default class UsuariosCM {
             return new DataNotFoundException(codigos.noEncontradoUsuario);
         }
         const users = us.docs.map(data => data.data()) as USR[];
+        console.log(users);
         return users[0]; // parte de la teoria que solo existe un usuario con la boleta indicada
     }
 
@@ -124,27 +143,41 @@ export default class UsuariosCM {
         return usr;
     }
 
-    // registro para docentes
-    private registrarDoc = async (rfc: string, pass: string, nombre: string) => {
+    // registro para empleados
+    public registrarempleado = async (tipo: number, rfc: string, pass: string, edificio: string) => {
         if (rfc === undefined || rfc === null || rfc === '') {
             return new DataNotFoundException(codigos.datoNoEncontrado);
         }
         if (pass === undefined || pass === null || pass === '') {
             return new DataNotFoundException(codigos.datoNoEncontrado);
         }
-        const usr = {
-            tipo: data.tipo, // falta verificar
-            usuario: rfc,
-            clave: pass,
-            nombre: nombre,
-            edificio: data.edificio, // falta verificar
-            id: ''
+
+        const requestData = {
+            rfc: rfc
         };
-        const saveUser = await this.refUs.add(usr);
-        const key = saveUser.id;
-        await saveUser.update({ id: key });
-        usr.id = key;
-        return usr;
+
+        const response = await this.peticionExterna('/pump/web/index.php/personal', requestData);
+        
+        if(response.estatus === true) {
+            let usr: any;
+            usr = {
+                tipo: tipo, // falta verificar
+                usuario: rfc,
+                clave: pass,
+                nombre: response.datos.nombre,
+                edificio: edificio, // falta verificar
+                id: ''
+            };
+
+            const saveUser = await this.refUs.add(usr);
+            const key = saveUser.id;
+            await saveUser.update({ id: key });
+            usr.id = key;
+
+            return usr as USR;
+        }
+
+        return new DataNotFoundException(codigos.noEncontradoUsuario);
     }
 
 }

@@ -1,5 +1,5 @@
 import { Request, Response, Router, NextFunction } from 'express';
-import DataNotFoundException from 'src/exceptions/DataNotFoundException';
+import DataNotFoundException from '../../exceptions/DataNotFoundException';
 import Controller from '../../interfaces/controller.interface';
 
 // import de archivos CM
@@ -22,7 +22,7 @@ class UsuariosController implements Controller {
     // Al iniciar el controlador carga las respectivas rutas
     initializeRoutes() {
         this.router.get(this.path + '/login', this.ingresar);
-        this.router.post(this.path + '/register', this.ingresar);
+        this.router.post(this.path + '/register', this.registrarEmpleado);
     }
 
     /*
@@ -40,6 +40,19 @@ class UsuariosController implements Controller {
             return;
         }
         res.send({ estatus: true, usuario: respuesta });
+    }
+
+    private registrarEmpleado = async (req: Request, res: Response, next: NextFunction) => {
+        const datos = req.body;
+        const respuesta = await this.usuariosCM.registrarempleado(datos.tipo, datos.rfc, datos.pass, datos.laboratorio);
+
+        if(respuesta instanceof DataNotFoundException) {
+            next(respuesta);
+            console.log(respuesta);
+            return;
+        }
+
+        res.send({ estatus: true, usuario: respuesta});
     }
 
 }
