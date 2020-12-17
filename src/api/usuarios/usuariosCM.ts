@@ -1,3 +1,9 @@
+/*
+ * autor: ibelmonte
+ * modifico: obelmonte
+ * fecha de modificacion: 16/12/2020 
+ */
+
 import * as admin from 'firebase-admin';
 import { codigos } from '../../exceptions/codigos';
 import { variable } from '../variables';
@@ -18,7 +24,14 @@ export default class UsuariosCM {
     private db = admin.firestore();
     private refUs = this.db.collection(variable['usuarios']);
 
-    // Endpoint para registrar o logearse dentro del sistema.
+    /*
+     * @description Endpoint para registrar o logearse dentro del sistema.
+     * @params 
+     *   @param  username(username para ingresar)
+     *   @param  password(password para auth)
+     * @retuns {usr: {...} }	
+     * @author obelmonte
+     */
     public ingresar = async (credenciales: any) => {
 
         // Expresiones regulares para boleta o RFC
@@ -73,11 +86,18 @@ export default class UsuariosCM {
         return new DataNotFoundException(codigos.noEncontradoUsuario);
     }
 
-    // realizar una peticion a un sitio externo
+    /*
+     * @description Realiza una consulta a la API de la escuela
+     * @params 
+     *   @param  path(ruta de API de la escuela, existe una para alumnos y otra para trabajadores)
+     *   @param  data(datos de autenticacion del SAES del ususario)
+     * @retuns {estatus:boolean, datos: {...} }	
+     * @author obelmonte
+     */
     private peticionExterna = async (path: string, data: any) => {
         let httpResponse: any;
 
-        const url = 'http://148.204.142.2' + path
+        const url = 'http://148.204.142.2' + path;
         const header = {
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +115,13 @@ export default class UsuariosCM {
         return httpResponse.data;
     }
 
-    // login de usuario
+    /*
+     * @description Recupera los datos del usuario de la base de datos
+     * @params 
+     *   @param  boleta(identificador del usuario dentro de la base de datos)
+     * @retuns { ... }	
+     * @author obelmonte
+     */
     private loginUser = async (boleta: string) => {
         if (boleta === undefined || boleta === null || boleta === '') {
             return new DataNotFoundException(codigos.datoNoEncontrado);
@@ -109,7 +135,14 @@ export default class UsuariosCM {
         return users[0]; // parte de la teoria que solo existe un usuario con la boleta indicada
     }
 
-    // login de trabajadores
+    /*
+     * @description Recupera los datos de un trabajador de la base de datos
+     * @params 
+     *   @param  rfc(identificador del usuario dentro de la base de datos)
+     *   @param  password(contraseña de acceso dentro de la base de datos)
+     * @retuns { ... }	
+     * @author obelmonte
+     */
     private loginUserTrabajadores = async (rfc: string, password: string) => {
         if (rfc === undefined || rfc === null || rfc === '') {
             return new DataNotFoundException(codigos.datoNoEncontrado);
@@ -125,7 +158,14 @@ export default class UsuariosCM {
         return users[0]; // parte de la teoria que solo existe un usuario con el rfc y la clave
     }
 
-    // registra un usuario
+    /*
+     * @description Registra un alumno a la base de datos
+     * @params 
+     *   @param  boleta(identificador del alumno dentro de la base de datos)
+     *   @param  nombre(nombre de usuario registrado)
+     * @retuns { ... }	
+     * @author obelmonte
+     */
     private register = async (boleta: string, nombre: string) => {
         if (boleta === undefined || boleta === null || boleta === '') {
             return new DataNotFoundException(codigos.datoNoEncontrado);
@@ -143,8 +183,17 @@ export default class UsuariosCM {
         return usr;
     }
 
-    // registro para empleados
-    public registrarempleado = async (tipo: number, rfc: string, pass: string, edificio: string) => {
+    /*
+     * @description registro de empleados.
+     * @params 
+     *   @param  tipo(tipo del empleado: doscente o tecnico)
+     *   @param  rfc(rfc del empleado)
+     *   @param  pass(password para auth)
+     *   @param  laboratorio sobre el que tiene jurisdiccion
+     * @retuns { ... }	
+     * @author obelmonte
+     */
+    public registrarEmpleado = async (tipo: number, rfc: string, pass: string, edificio: string) => {
         if (rfc === undefined || rfc === null || rfc === '') {
             return new DataNotFoundException(codigos.datoNoEncontrado);
         }
