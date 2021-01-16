@@ -10,7 +10,7 @@ import { variable } from '../variables';
 
 //import de exceptions
 import DataNotFoundException from '../../exceptions/DataNotFoundException';
-//import InternalServerException from '../../exceptions/InternalServerException';
+import InternalServerException from '../../exceptions/InternalServerException';
 
 // import interfaces
 import USR from '../../interfaces/colecciones/USR.interface';
@@ -227,6 +227,79 @@ export default class UsuariosCM {
         }
 
         return new DataNotFoundException(codigos.noEncontradoUsuario);
+    }
+
+    public obtenerUsuario = async (id: string) => {
+        if(id === null || id === undefined || id === '') {
+            return new DataNotFoundException(codigos.identificadorInvalido);
+        }
+
+        const registro = await this.refUs.doc(id).get()
+            .then((data) => {
+                if(data.exists) {
+                    const document = data.data() as USR;
+
+                    return document
+                }
+                return new DataNotFoundException(codigos.datosNoEncontrados);
+            }).catch((error) => {
+                return new InternalServerException(codigos.datoNoEncontrado);
+            });
+
+        return registro;
+    }
+
+     /*
+     * @description cambio del esatdo de vetado de un usuario a los lavoratorios dentro del sistema
+     * @params
+     *   @param id(id del usuario que será modificado)
+     *   @param vetado(booleano del estado de vetado del usuario)
+     * @returns  { ... }
+     * @author obelmonte
+     */
+    public actualizarVetado = async (id: string, vetado: Boolean) => {
+        if(id === undefined || id === null || id === '') {
+            return new DataNotFoundException(codigos.identificadorInvalido);
+        }
+
+        const datos = {
+            vetado,
+            actualizado: admin.firestore.Timestamp.now().toDate()
+        };
+        //const usuario = await this.refUs.where('id', '==', id).get();
+        const usuario = await this.refUs.doc(id).update(datos)
+            .then(async () => {
+                const editado = await this.obtenerUsuario(id);
+
+                return editado;
+            })
+            .catch(err => {
+                return new InternalServerException(codigos.datoNoEncontrado, err);
+            });
+
+        return usuario;
+    }
+
+    /*
+     * @description obtencion del estado de vetado de un usuario
+     * @params
+     *   @param id(id del usuario que será consultado)
+     * @returns  true/false
+     * @author obelmonte
+     */
+    public rebisarVetado = async (id: string) => {
+        if(id === undefined || id === null || id === '') {
+            return new DataNotFoundException(codigos.identificadorInvalido);
+        }
+
+        const registro = await  this.obtenerUsuario(id);
+        
+        if(registro instanceof DataNotFoundException || 
+           registro instanceof InternalServerException) {
+            return registro;
+        }
+
+        return registro.vetado
     }
 
 }

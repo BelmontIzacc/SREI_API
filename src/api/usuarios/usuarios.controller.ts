@@ -5,6 +5,7 @@
  */
 
 import { Request, Response, Router, NextFunction } from 'express';
+import InternalServerException from '../../exceptions/InternalServerException';
 import DataNotFoundException from '../../exceptions/DataNotFoundException';
 import Controller from '../../interfaces/controller.interface';
 
@@ -32,6 +33,8 @@ class UsuariosController implements Controller {
     initializeRoutes() {
         this.router.get(this.path + '/login', this.ingresar);
         this.router.post(this.path + '/register', this.registrarEmpleado);
+        this.router.get(this.path + '/vetado', this.berificarVetado);
+        this.router.patch(this.path + '/vetado', this.cambiarVetado);
     }
 
     /*
@@ -73,6 +76,64 @@ class UsuariosController implements Controller {
         }
 
         res.send({ estatus: true, usuario: respuesta});
+    }
+
+    /*
+     * @description Endpoint para cambiar el esatdo de vetado de un usuario a los lavoratorios dentro del sistema
+     * @params
+     *   @param id(id del usuario que será modificado)
+     *   @param vetado(booleano del estado de vetado del usuario)
+     * @returns {
+     *              estatus: true/false,
+     *              editado: true,
+     *              usuarios: { ... }
+     *          }
+     * @author obelmonte
+     */
+    private cambiarVetado = async (req: Request, res: Response, next: NextFunction) => {
+       
+        const { id, vetado } = req.body;
+        const respuesta = await this.usuariosCM.actualizarVetado(id, vetado);
+
+        if(respuesta instanceof DataNotFoundException ||
+           respuesta instanceof InternalServerException) {
+           
+            res.send(respuesta);
+        }
+
+        res.send({
+            estatus: true, 
+            editado: true,
+            usuario: respuesta
+        });
+    }
+
+    /*
+     * @description consulta del esatdo de vetado de un usuario a los lavoratorios dentro del sistema
+     * @params
+     *   @param id(id del usuario que será consultado)
+     * @returns  
+     *      {
+     *          estatus: true/false
+     *          vetado: true/false
+     *      }
+     * @author obelmonte
+     */
+    private berificarVetado = async (req: Request, res: Response) => {
+        const { id } = req.body;
+        const vetado = await this.usuariosCM.rebisarVetado(id);
+
+        if(vetado instanceof DataNotFoundException ||
+            vetado instanceof InternalServerException) {
+            
+             res.send(vetado);
+        }
+
+        res.send({
+            estatus: true,
+            vetado
+        });
+
     }
 
 }
