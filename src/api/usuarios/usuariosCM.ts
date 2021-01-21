@@ -230,10 +230,7 @@ export default class UsuariosCM {
     }
 
     public obtenerUsuario = async (id: string) => {
-        if(id === null || id === undefined || id === '') {
-            return new DataNotFoundException(codigos.identificadorInvalido);
-        }
-
+       
         const registro = await this.refUs.doc(id).get()
             .then((data) => {
                 if(data.exists) {
@@ -257,19 +254,35 @@ export default class UsuariosCM {
      * @returns  { ... }
      * @author obelmonte
      */
-    public actualizarVetado = async (id: string, vetado: Boolean) => {
-        if(id === undefined || id === null || id === '') {
+    public actualizarVetado = async (usuario_id: string, vetado: Boolean, laboratorio_id: string) => {
+        if(usuario_id === undefined || usuario_id === null || usuario_id === ''
+        || laboratorio_id === undefined || laboratorio_id === null || laboratorio_id === '') {
             return new DataNotFoundException(codigos.identificadorInvalido);
         }
 
+        const usuario = await this.obtenerUsuario(usuario_id);
+
+        if(usuario instanceof DataNotFoundException || usuario instanceof InternalServerException){
+            return usuario;
+        }
+
+        let vetados = usuario.vetado;
+        try {
+            vetados[laboratorio_id] = vetado;
+        } catch(error) {
+            vetados = {};
+
+            vetados[laboratorio_id] = vetado;
+        }
+
         const datos = {
-            vetado,
+            vetado: vetados,
             actualizado: admin.firestore.Timestamp.now().toDate()
         };
         //const usuario = await this.refUs.where('id', '==', id).get();
-        const usuario = await this.refUs.doc(id).update(datos)
+        const actualizado = await this.refUs.doc(usuario_id).update(datos)
             .then(async () => {
-                const editado = await this.obtenerUsuario(id);
+                const editado = await this.obtenerUsuario(usuario_id);
 
                 return editado;
             })
@@ -277,7 +290,7 @@ export default class UsuariosCM {
                 return new InternalServerException(codigos.datoNoEncontrado, err);
             });
 
-        return usuario;
+        return actualizado;
     }
 
     /*
@@ -287,19 +300,22 @@ export default class UsuariosCM {
      * @returns  true/false
      * @author obelmonte
      */
-    public rebisarVetado = async (id: string) => {
-        if(id === undefined || id === null || id === '') {
+    public rebisarVetado = async (usuario_id: string, laboratorio_id: string) => {
+        if(usuario_id === undefined || usuario_id === null || usuario_id === ''
+        || laboratorio_id === undefined || laboratorio_id === null || laboratorio_id === '') {
             return new DataNotFoundException(codigos.identificadorInvalido);
         }
 
-        const registro = await  this.obtenerUsuario(id);
+        const registro = await  this.obtenerUsuario(usuario_id);
         
         if(registro instanceof DataNotFoundException || 
            registro instanceof InternalServerException) {
             return registro;
         }
 
-        return registro.vetado
+        const vetado = new Map(Object.entries(registro.vetado));
+
+        return vetado.get(laboratorio_id);
     }
 
 }

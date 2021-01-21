@@ -92,8 +92,8 @@ class UsuariosController implements Controller {
      */
     private cambiarVetado = async (req: Request, res: Response, next: NextFunction) => {
        
-        const { id, vetado } = req.body;
-        const respuesta = await this.usuariosCM.actualizarVetado(id, vetado);
+        const { usuario_id, vetado, laboratorio_id } = req.body;
+        const respuesta = await this.usuariosCM.actualizarVetado(usuario_id, vetado, laboratorio_id);
 
         if(respuesta instanceof DataNotFoundException ||
            respuesta instanceof InternalServerException) {
@@ -120,8 +120,8 @@ class UsuariosController implements Controller {
      * @author obelmonte
      */
     private berificarVetado = async (req: Request, res: Response) => {
-        const { id } = req.body;
-        const vetado = await this.usuariosCM.rebisarVetado(id);
+        const { usuario_id, laboratorio_id} = req.body;
+        const vetado = await this.usuariosCM.rebisarVetado(usuario_id, laboratorio_id);
 
         if(vetado instanceof DataNotFoundException ||
             vetado instanceof InternalServerException) {
