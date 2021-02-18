@@ -35,6 +35,7 @@ class UsuariosController implements Controller {
         this.router.post(this.path + '/register', this.registrarEmpleado);
         this.router.get(this.path + '/vetado', this.berificarVetado);
         this.router.patch(this.path + '/vetado', this.cambiarVetado);
+        this.router.get(this.path + '/usuarios/tipo', this.grupoUsuarios);
     }
 
     /*
@@ -134,6 +135,34 @@ class UsuariosController implements Controller {
         res.send({
             estatus: true,
             vetado
+        });
+    }
+
+    /*
+     * @description consulta la existencia de usuarios de un tipo especifico
+     * @params
+     *   @param tipo (valor numerico del tipo de usuarios a buscar)
+     * @returns  
+     *      {
+     *          estatus: true/false
+     *          usuarios: [{...}, ...]
+     *      }
+     * @author obelmonte
+     */
+    private grupoUsuarios = async (req: Request, res: Response) => {
+        const { tipo } = req.body;
+
+        const usuarios = await this.usuariosCM.grupoUsuarios(tipo);
+
+        if(usuarios instanceof DataNotFoundException ||
+           usuarios instanceof InternalServerException) {
+
+            res.send(usuarios);
+        }
+
+        res.send({
+            estatus: true,
+            usuarios
         });
     }
 }

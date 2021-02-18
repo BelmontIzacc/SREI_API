@@ -317,4 +317,37 @@ export default class UsuariosCM {
 
         return vetado.get(laboratorio_id);
     }
+
+    /*
+     * @description busca todos los usuarios de un tipo especifico
+     * @params 
+     *   @param  tipo(valor numerico correspondiente al tipo del grupo de usuaios a consultar)
+     * @retuns {usuarios: [{...}, ...] }
+     * @author obelmonte
+     */
+    public grupoUsuarios = async (tipo: number) => {
+        const elements: USR[] | PromiseLike<USR[]> = [];
+        
+        if(tipo === undefined || tipo === null || tipo < 0 || tipo > 3) {
+            return new DataNotFoundException(codigos.datosNoEncontrados);
+        }
+
+        const usuarios = await this.refUs.where('tipo', '==', tipo).get().then(data => {
+            if (!data.empty){
+                for (let index = 0; index < data.size; index++) {
+                    if (data.docs[index].exists){
+                        elements[index] = data.docs[index].data() as USR;
+                    }else{
+                        return new DataNotFoundException(codigos.datoNoEncontrado);
+                    }
+                }
+                return elements;
+            }
+            return new DataNotFoundException(codigos.datoNoEncontrado);
+        }).catch(err=>{
+            return new InternalServerException(codigos.datoNoEncontrado, err);
+        });
+
+        return usuarios;
+    }
 }
