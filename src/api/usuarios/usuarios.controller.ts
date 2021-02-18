@@ -81,12 +81,13 @@ class UsuariosController implements Controller {
     /*
      * @description Endpoint para cambiar el esatdo de vetado de un usuario a los lavoratorios dentro del sistema
      * @params
-     *   @param id(id del usuario que será modificado)
+     *   @param usuario_id(id del usuario que será modificado)
+     *   @param laboraotio_id(id del laboratorio base)
      *   @param vetado(booleano del estado de vetado del usuario)
      * @returns {
      *              estatus: true/false,
      *              editado: true,
-     *              usuarios: { ... }
+     *              usuario: { ... }
      *          }
      * @author obelmonte
      */
@@ -111,7 +112,8 @@ class UsuariosController implements Controller {
     /*
      * @description consulta del esatdo de vetado de un usuario a los lavoratorios dentro del sistema
      * @params
-     *   @param id(id del usuario que será consultado)
+     *   @param usuario_id(id del usuario que será consultado)
+     *   @param laboratorio_id(id del laboratorio base de la consulta)
      * @returns  
      *      {
      *          estatus: true/false
@@ -133,9 +135,7 @@ class UsuariosController implements Controller {
             estatus: true,
             vetado
         });
-
     }
-
 }
 
 export default UsuariosController;

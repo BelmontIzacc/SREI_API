@@ -317,5 +317,4 @@ export default class UsuariosCM {
 
         return vetado.get(laboratorio_id);
     }
-
 }
