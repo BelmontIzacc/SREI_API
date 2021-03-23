@@ -328,6 +328,7 @@ export default class UsuariosCM {
     public grupoUsuarios = async (tipo: number) => {
         const elements: USR[] | PromiseLike<USR[]> = [];
         
+        console.log(tipo);
         if(tipo === undefined || tipo === null || tipo < 0 || tipo > 3) {
             return new DataNotFoundException(codigos.datosNoEncontrados);
         }

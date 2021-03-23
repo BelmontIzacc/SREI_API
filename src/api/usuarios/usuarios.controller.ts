@@ -150,8 +150,11 @@ class UsuariosController implements Controller {
      * @author obelmonte
      */
     private grupoUsuarios = async (req: Request, res: Response) => {
-        const { tipo } = req.body;
+        let { tipo } = req.body;
 
+        if(tipo === null || tipo === undefined) 
+            tipo = parseInt(""+req.query.tipo);
+        
         const usuarios = await this.usuariosCM.grupoUsuarios(tipo);
 
         if(usuarios instanceof DataNotFoundException ||
