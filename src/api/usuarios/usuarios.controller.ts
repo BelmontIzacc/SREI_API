@@ -32,6 +32,7 @@ class UsuariosController implements Controller {
      */
     initializeRoutes() {
         this.router.get(this.path + '/login', this.ingresar);
+        this.router.get(this.path + '/login/test',this.testLogin);
         this.router.post(this.path + '/register', this.registrarEmpleado);
         this.router.get(this.path + '/vetado', this.berificarVetado);
         this.router.patch(this.path + '/vetado', this.cambiarVetado);
@@ -54,6 +55,19 @@ class UsuariosController implements Controller {
             return;
         }
         res.send({ estatus: true, usuario: respuesta });
+    }
+
+    private testLogin = async(req: Request, res: Response,next:   NextFunction) =>{
+        const { usuario, clave }  = req.body;
+        const respuesta = await this.usuariosCM.testLogin(usuario, clave);
+
+        if(respuesta instanceof DataNotFoundException) {
+            next(respuesta);
+            console.log(respuesta);
+            return;
+        }
+
+        res.send({status: true,usuario: respuesta});
     }
 
     /*

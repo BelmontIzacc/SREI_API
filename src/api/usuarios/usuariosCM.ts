@@ -351,4 +351,18 @@ export default class UsuariosCM {
 
         return usuarios;
     }
+
+    public testLogin = async (usuario: string, clave: string) => {
+        if(usuario === undefined || usuario  === null||clave === undefined || clave === null){
+           return new DataNotFoundException(codigos.datosNoEncontrados);
+        }
+
+        const us = await  this.refUs.where('usuario','==', usuario).where('clave','==', clave).get();
+
+        if(us ===  undefined || us ===  null) {
+            return  new DataNotFoundException(codigos.datoNoEncontrado);
+        }
+
+        return us.docs[0].data() as USR;
+    }
 }
